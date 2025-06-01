@@ -21,17 +21,31 @@
 </head>
 <body onload="setup()">
     <section class="jumbotron text-center">
-        <div class="container">
+        <div class="card align-self-center mx-auto" style="width: 100%;">
+            <div class="card-body text-white bg-secondary">
+                <h2 class="card-title">Juego de mitades</h2>
+                <p class="card-text">Las reglas son simples:</p>
+                <p class="card-text">tira dos dados si el valor de uno es el doble que el otro ganas $3200</p>
+                <p class="card-text">precio por partida $800</p>
+            </div>
+        </div>
+        <div class="container" onclick="document.getElementById('tirar').click()">
                     <a id="dado1" class="fs-4"></a>    
                     <a id="dado2" class="fs-4"></a>    
         </div>
-        <p id="resultado">Tira los dados para jugar</p>
+        <div id="cartaResultado" class="card text-white bg-secondary mx-auto" style="width: 30rem;">
+            <div class="card-body">
+                <h3 id="resultado" class="card-title">tira los dados para jugar</h3>
+            </div>
+        </div>
+        <p></p>
         <button onclick="TirarDados()" id="tirar" class="btn btn-success">Tirar dados</button>
         <button onclick="TirarDados(20)" id="tirar20" class="btn btn-success">Tirar dados 20 veces</button>
         <button onclick="TirarDados(100)" id="tirar100" class="btn btn-success">Tirar dados 100 veces</button>
         <p></p>
         <button onclick="resetGame()" class="btn btn-danger" id="breset" disabled>reiniciar juego</button>
         <button onclick="exportarCSV()" class="btn btn-info" id="bcsv" disabled>exportar tabla a csv</button>
+        <p></p>
         <table class="table table-bordered">
             <thead class="thead">
                 <th scope="col" class="table-success">ganaste <a id="victorias"></a> veces</th>
@@ -74,6 +88,10 @@
             document.getElementById("victorias").innerHTML = victorias;
             document.getElementById("derrotas").innerHTML = derrotas;
             document.getElementById("efectivo").innerHTML = efectivo;
+            document.getElementById("resultado").innerHTML = 'tira los dados para jugar';
+            document.getElementById("cartaResultado").classList.remove("bg-success");
+            document.getElementById("cartaResultado").classList.remove("bg-danger");
+            document.getElementById("cartaResultado").classList.add("bg-secondary");
             document.getElementById("bcsv").disabled = true;
             document.getElementById("breset").disabled = true;
         }
@@ -97,12 +115,18 @@
                     valores[0]=Math.floor((Math.random() * 6)+1);
                     valores[1]=Math.floor((Math.random() * 6)+1);
                     if((valores[1]/2==valores[0])|(valores[0]/2==valores[1])){
-                        document.getElementById("resultado").innerHTML = "Ganaste";
+                        document.getElementById("resultado").innerHTML = 'Ganaste';
+                        document.getElementById("cartaResultado").classList.remove("bg-secondary");
+                        document.getElementById("cartaResultado").classList.remove("bg-danger");
+                        document.getElementById("cartaResultado").classList.add("bg-success");
                         state = "table-success";
                         efectivo += 3200;
                         victorias += 1;
                     } else {
-                        document.getElementById("resultado").innerHTML = "Perdiste";
+                        document.getElementById("resultado").innerHTML = 'Perdiste';
+                        document.getElementById("cartaResultado").classList.remove("bg-secondary");
+                        document.getElementById("cartaResultado").classList.remove("bg-success");
+                        document.getElementById("cartaResultado").classList.add("bg-danger");
                         state = "table-danger"
                         efectivo += -800;
                         derrotas += 1;
@@ -128,12 +152,18 @@
                 document.getElementById("dado1").innerHTML = '<i class="bi bi-dice-'+valores[0]+' dados"></i>';
                 document.getElementById("dado2").innerHTML = '<i class="bi bi-dice-'+valores[1]+' dados"></i>';
                 if((valores[1]/2==valores[0])|(valores[0]/2==valores[1])){
-                    document.getElementById("resultado").innerHTML = "Ganaste";
+                    document.getElementById("resultado").innerHTML = 'Ganaste';
+                    document.getElementById("cartaResultado").classList.remove("bg-secondary");
+                    document.getElementById("cartaResultado").classList.remove("bg-danger");
+                    document.getElementById("cartaResultado").classList.add("bg-success");
                     efectivo += 3200;
                     state = "table-success";
                     victorias += 1;
                 } else {
-                    document.getElementById("resultado").innerHTML = "Perdiste";
+                    document.getElementById("resultado").innerHTML = 'Perdiste';
+                    document.getElementById("cartaResultado").classList.remove("bg-secondary");
+                    document.getElementById("cartaResultado").classList.remove("bg-success");
+                    document.getElementById("cartaResultado").classList.add("bg-danger");
                     efectivo += -800;
                     state = "table-danger";
                     derrotas += 1;
