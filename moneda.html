@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Juego de moneda</title>
+    <link rel="icon" href="https://images.vexels.com/media/users/3/157332/isolated/preview/9c1a0590528c68138bc08d9df0942f9d-icono-de-moneda-dolar.png" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href= "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <style>
+        .dados { 
+            font-size: 600%; 
+        }
+        .ultimos thead th {
+            position: sticky; 
+            top: 0; z-index: 1;
+        }
+    </style>
+</head>
+<body onload="setup()">
+    <section class="jumbotron text-center">
+        <div class="card align-self-center mx-auto" style="width: 100%;">
+            <div class="card-body text-white bg-success">
+                <h2 class="card-title">Tira la moneda</h2>
+                <p class="card-text">Las reglas son simples: tira la moneda </p>
+                <p class="card-text">si sale cara <i class="bi bi-check-circle-fill" style="font-size: 2rem;"></i> ganas $2000</p>
+                <p class="card-text">si sale cruz <i class="bi bi-x-circle-fill" style="font-size: 2rem;"></i> perdes $1000</p>
+            </div>
+        </div>
+        <div class="container" onclick="document.getElementById('tirar').click()">
+                    <a id="moneda" style="font-size: 10rem;"></a>    
+        </div>
+        <div id="cartaResultado" class="card text-white bg-primary mx-auto" style="width: 30rem;">
+            <div class="card-body">
+                <h3 id="resultado" class="card-title">tira la moneda para jugar</h3>
+            </div>
+        </div>
+        <p></p>
+        <button onclick="TirarMoneda()" id="tirar" class="btn btn-success">Tirar la moneda</button>
+        <button onclick="TirarMoneda(20)" id="tirar20" class="btn btn-success">Tirar la moneda 20 veces</button>
+        <button onclick="TirarMoneda(100)" id="tirar100" class="btn btn-success">Tirar la moneda 100 veces</button>
+        <p></p>
+        <button onclick="resetGame()" class="btn btn-danger" id="breset" disabled>reiniciar juego</button>
+        <p></p>
+        <table class="table table-bordered">
+            <thead class="thead">
+                <th scope="col" class="table-info">Nro de tiros <a id="tiro"></a></th>
+                <th scope="col" class="table-success">ganaste <a id="victorias"></a></th>
+                <th scope="col" class="table-danger"> perdiste <a id="derrotas"></a></th>
+                <th scope="col" class="table-info"> tu saldo es de <a id="efectivo"></a> pesos</th>
+            </thead>
+        </table>
+        <div class="card align-self-center mx-auto" style="width: 100%;">
+            <div class="card-body text-white bg-primary">
+                <h2 class="card-title">¡La suerte es divertida, pero no siempre está de tu lado!</h2>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        //contador de tiradas
+        let counter = 0;
+        const objTiros = document.getElementById("tiro");
+        //contador de victorias
+        let victorias = 0;
+        const objVictorias = document.getElementById("victorias");
+        //contador de derrotas
+        let derrotas = 0;
+        const objDerrotas = document.getElementById("derrotas");
+        //contador efectivo
+        let efectivo = 0;
+        const objEfectivo = document.getElementById("efectivo");
+        //valores y graficos de los graficos de la moneda
+        let valor = 0
+        const objMoneda = document.getElementById("moneda");
+        //manejo de resultado
+        const txtResultado = document.getElementById("resultado");
+        const crdResultado = document.getElementById("cartaResultado");
+        //botones
+        const btnReset = document.getElementById("breset");
+        const btnTir = document.getElementById("tirar");
+        const btnTir20 = document.getElementById("tirar20");
+        const btnTir100 = document.getElementById("tirar100");
+
+
+        //sonido de esta pagina https://www.myinstants.com/en/instant/coin-pou-65298/
+        var coinSound = new Audio("https://www.myinstants.com/media/sounds/coin-pou.mp3")
+
+        //carga la forma inicial del juego
+        function setup() {
+            valor=1;
+            counter = 0;
+            victorias = 0;
+            derrotas = 0;
+            efectivo = 0;
+            objMoneda.innerHTML = genMoneda(1);
+            objVictorias.innerHTML = victorias+" veces";
+            objDerrotas.innerHTML = derrotas+" veces";
+            objTiros.innerHTML = counter;
+            objEfectivo.innerHTML = efectivo;
+            setResultado("tira la moneda para jugar",0);
+            btnReset.disabled = true;
+        }
+
+        //funcion encargada de generar los valores aleatorios y manegar el juego en general
+        //hace los valores de la moneda, y suma o resta el efectivo
+        async function TirarMoneda(multiple=1) {
+            btnReset.disabled = true;
+            btnTir.disabled = true;
+            btnTir20.disabled = true;
+            btnTir100.disabled = true;
+            coinSound.play();
+            let state = "";
+            await girarMoneda();
+
+            for (let i = 0; i < multiple; i++) {
+                counter += 1;
+                valor=Math.floor(Math.random() * 2);
+                if(valor==1){
+                    setResultado("Ganaste",1);
+                    efectivo += 2000;
+                    victorias += 1;
+                } else {
+                    setResultado("Perdiste",2);
+                    efectivo += -1000;
+                    derrotas += 1;
+                }
+                objVictorias.innerHTML = victorias+" veces";
+                objDerrotas.innerHTML = derrotas+" veces";
+                objTiros.innerHTML = counter;
+                objEfectivo.innerHTML = efectivo;
+                objMoneda.innerHTML = genMoneda(valor);
+            }
+                
+            coinSound.pause();
+            coinSound.currentTime=0;
+            btnReset.disabled = false;
+            btnTir.disabled = false;
+            btnTir20.disabled = false;
+            btnTir100.disabled = false;
+        }
+
+        //realiza la animacion de simular girar la moneda
+        async function girarMoneda(){
+            for (let i = 0; i < 25; i++) {
+                objMoneda.innerHTML = genMoneda(Math.floor(Math.random() * 2));
+                await sleep(20);
+            }
+        }
+
+        //esta funcion es para generar tiempo oscioso
+        //la utiliza la animacion de girar la moneda ya que dibuja un estado espera 10ms y dibuja otro estado
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        //funcion encargada de reiniciar el juego
+        function resetGame(){
+            if(confirm("Esta seguro que desea reiniciar")){
+                setup();
+            }
+        }
+
+        //cambia el dibujo de la tabla de resultados
+        function setResultado(texto,estado){
+            txtResultado.innerHTML = texto;
+            switch(estado){
+                case 0:
+                    crdResultado.classList.remove("bg-success");
+                    crdResultado.classList.remove("bg-danger");
+                    crdResultado.classList.add("bg-primary");
+                break;
+
+                case 1:
+                    crdResultado.classList.add("bg-success");
+                    crdResultado.classList.remove("bg-danger");
+                    crdResultado.classList.remove("bg-primary");
+                break;
+
+                case 2:
+                    crdResultado.classList.remove("bg-success");
+                    crdResultado.classList.add("bg-danger");
+                    crdResultado.classList.remove("bg-primary");
+                break;
+            }
+        }
+
+        //funcion usada para llamarar el icono de bootstrap correspondiente al valor de la moneda
+        function genMoneda(num){
+            if(num == 1){
+                return '<i class="bi bi-x-circle-fill"></i>';
+            } else {
+                return '<i class="bi bi-check-circle-fill"></i>';
+            }
+        }
+    </script>
+</body>
+</html>

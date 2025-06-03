@@ -1,222 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Dados</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href= "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <style>
-        .dados { 
-            font-size: 600%; 
-        }
-        .ultimos thead th {
-            position: sticky; 
-            top: 0; z-index: 1;
-        }
-    </style>
-</head>
-<body onload="setup()">
-    <section class="jumbotron text-center">
-        <div class="card align-self-center mx-auto" style="width: 100%;">
-            <div class="card-body text-white bg-secondary">
-                <h2 class="card-title">Juego de mitades</h2>
-                <p class="card-text">Las reglas son simples:</p>
-                <p class="card-text">tira dos dados si el valor de uno es el doble que el otro ganas $3200</p>
-                <p class="card-text">precio por partida $800</p>
+    <head>
+        <title>Selector de juego</title>
+        <link rel="icon" href="https://cdn-icons-png.freepik.com/512/1714/1714131.png" type="image/x-icon">
+        
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href= "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <style>
+            .dados { 
+                background-color: white;
+                transition: background-color 0.5s; 
+            }
+            .dados:hover{
+                background-color: lightcoral;
+            }
+
+            .moneda {
+                background-color: white;
+                transition: background-color 0.5s; 
+            }
+            .moneda:hover{
+                background-color: rgb(248, 225, 95);
+                background-color
+            }
+        </style>
+    </head>
+    <body>
+        <div class="jumbotron text-center">
+            <p></p>
+            <p></p>
+            <p></p>
+            <p></p>
+            <div class="row" onclick="window.location.href = 'dados.html';">
+
+                <div class="dados col">
+                    <p><h1>ir a juego de adulto</h1></p>
+                    <img src="https://cdn-icons-png.freepik.com/512/1714/1714131.png" class="rounded float-start" style="height: 200px; width: 200px;">
+                </div>
+
+                <div class="moneda col" onclick="window.location.href = 'moneda.html';">
+                    <p><h1>ir a juego infantil</h1></p>
+                    <img src="https://images.vexels.com/media/users/3/157332/isolated/preview/9c1a0590528c68138bc08d9df0942f9d-icono-de-moneda-dolar.png" class="rounded float-start" style="height: 200px; width: 200px;">
+                </div>
+
             </div>
-        </div>
-        <div class="container" onclick="document.getElementById('tirar').click()">
-                    <a id="dado1" class="fs-4"></a>    
-                    <a id="dado2" class="fs-4"></a>    
-        </div>
-        <div id="cartaResultado" class="card text-white bg-secondary mx-auto" style="width: 30rem;">
-            <div class="card-body">
-                <h3 id="resultado" class="card-title">tira los dados para jugar</h3>
-            </div>
-        </div>
-        <p></p>
-        <button onclick="TirarDados()" id="tirar" class="btn btn-success">Tirar dados</button>
-        <button onclick="TirarDados(20)" id="tirar20" class="btn btn-success">Tirar dados 20 veces</button>
-        <button onclick="TirarDados(100)" id="tirar100" class="btn btn-success">Tirar dados 100 veces</button>
-        <p></p>
-        <button onclick="resetGame()" class="btn btn-danger" id="breset" disabled>reiniciar juego</button>
-        <button onclick="exportarCSV()" class="btn btn-info" id="bcsv" disabled>exportar tabla a csv</button>
-        <p></p>
-        <table class="table table-bordered">
-            <thead class="thead">
-                <th scope="col" class="table-success">ganaste <a id="victorias"></a> veces</th>
-                <th scope="col" class="table-danger"> perdiste <a id="derrotas"></a> veces </th>
-                <th scope="col" class="table-info"> tu efectivo es de <a id="efectivo"></a> pesos</th>
-            </thead>
-        </table>
-        <div class="table-responsive" style="height: 30rem; overflow-y: auto;">
-            <table class="table table-bordered ultimos" id="ultimos">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">tiro #</th>
-                        <th scope="col">dado 2</th>
-                        <th scope="col">dado 1</th>
-                        <th scope="col">resultado</th>
-                        <th scope="col">efectivo</th>
-                    </tr> 
-                </thead>
-            </table>
-        </div>
-    </section>
-    <footer style="text-align: center;">
-        El juego compulsivo es perjudicial para vos y tu familia
-        <p></p>
-        <p></p>
-        <p></p>
-    </footer>
 
-    <script>
-        let counter = 0;
-        let victorias = 0;
-        let derrotas = 0;
-        let valores = [0,0]
-        let efectivo = 0;
-        //sonido de esta pagina https://www.myinstants.com/en/instant/rolling-dice-98674/
-        var diceSound = new Audio("https://www.myinstants.com/media/sounds/shake-and-roll-dice-soundbible.mp3")
-        function setup() {
-            valores[0]=1;
-            valores[1]=6;
-            counter = 0;
-            victorias = 0;
-            derrotas = 0;
-            efectivo = 0;
-            document.getElementById("dado1").innerHTML = '<i class="bi bi-dice-1 dados"></i>';
-            document.getElementById("dado2").innerHTML = '<i class="bi bi-dice-6 dados"></i>';
-            document.getElementById("victorias").innerHTML = victorias;
-            document.getElementById("derrotas").innerHTML = derrotas;
-            document.getElementById("efectivo").innerHTML = efectivo;
-            document.getElementById("resultado").innerHTML = 'tira los dados para jugar';
-            document.getElementById("cartaResultado").classList.remove("bg-success");
-            document.getElementById("cartaResultado").classList.remove("bg-danger");
-            document.getElementById("cartaResultado").classList.add("bg-secondary");
-            document.getElementById("bcsv").disabled = true;
-            document.getElementById("breset").disabled = true;
-        }
-        async function TirarDados(multiple=1) {
-            document.getElementById("bcsv").disabled = false;
-            document.getElementById("breset").disabled = false;
-            document.getElementById("tirar").disabled = true;
-            document.getElementById("tirar20").disabled = true;
-            document.getElementById("tirar100").disabled = true;
-            diceSound.play();
-            let state = "";
-            if(multiple!=1){
-                for (let i = 0; i < 50; i++) {
-                    document.getElementById("dado1").innerHTML = '<i class="bi bi-dice-'+Math.floor((Math.random() * 6)+1)+' dados"></i>';
-                    document.getElementById("dado2").innerHTML = '<i class="bi bi-dice-'+Math.floor((Math.random() * 6)+1)+' dados"></i>';
-                    await sleep(10);
-                }
-
-                for (let i = 0; i < multiple; i++) {
-                    counter += 1;
-                    valores[0]=Math.floor((Math.random() * 6)+1);
-                    valores[1]=Math.floor((Math.random() * 6)+1);
-                    if((valores[1]/2==valores[0])|(valores[0]/2==valores[1])){
-                        document.getElementById("resultado").innerHTML = 'Ganaste';
-                        document.getElementById("cartaResultado").classList.remove("bg-secondary");
-                        document.getElementById("cartaResultado").classList.remove("bg-danger");
-                        document.getElementById("cartaResultado").classList.add("bg-success");
-                        state = "table-success";
-                        efectivo += 3200;
-                        victorias += 1;
-                    } else {
-                        document.getElementById("resultado").innerHTML = 'Perdiste';
-                        document.getElementById("cartaResultado").classList.remove("bg-secondary");
-                        document.getElementById("cartaResultado").classList.remove("bg-success");
-                        document.getElementById("cartaResultado").classList.add("bg-danger");
-                        state = "table-danger"
-                        efectivo += -800;
-                        derrotas += 1;
-                    }
-                    document.getElementById("ultimos").innerHTML += "<tbody><th>"+counter+"</th><td>"+valores[0]+"</td><td>"+valores[1]+"</td><td class='"+state+"'>"+document.getElementById("resultado").innerHTML+"</td><td class='"+state+"'>"+efectivo+"</td></tbody>";
-                    document.getElementById("victorias").innerHTML = victorias;
-                    document.getElementById("derrotas").innerHTML = derrotas;
-                    document.getElementById("efectivo").innerHTML = efectivo;
-                    document.getElementById("dado1").innerHTML = '<i class="bi bi-dice-'+valores[0]+' dados"></i>';
-                    document.getElementById("dado2").innerHTML = '<i class="bi bi-dice-'+valores[1]+' dados"></i>';
-                }
-                
-            } else {
-
-                counter+=1;
-                valores[0]=Math.floor((Math.random() * 6)+1);
-                valores[1]=Math.floor((Math.random() * 6)+1);
-                for (let i = 0; i < 50; i++) {
-                    document.getElementById("dado1").innerHTML = '<i class="bi bi-dice-'+Math.floor((Math.random() * 6)+1)+' dados"></i>';
-                    document.getElementById("dado2").innerHTML = '<i class="bi bi-dice-'+Math.floor((Math.random() * 6)+1)+' dados"></i>';
-                    await sleep(10);
-                }
-                document.getElementById("dado1").innerHTML = '<i class="bi bi-dice-'+valores[0]+' dados"></i>';
-                document.getElementById("dado2").innerHTML = '<i class="bi bi-dice-'+valores[1]+' dados"></i>';
-                if((valores[1]/2==valores[0])|(valores[0]/2==valores[1])){
-                    document.getElementById("resultado").innerHTML = 'Ganaste';
-                    document.getElementById("cartaResultado").classList.remove("bg-secondary");
-                    document.getElementById("cartaResultado").classList.remove("bg-danger");
-                    document.getElementById("cartaResultado").classList.add("bg-success");
-                    efectivo += 3200;
-                    state = "table-success";
-                    victorias += 1;
-                } else {
-                    document.getElementById("resultado").innerHTML = 'Perdiste';
-                    document.getElementById("cartaResultado").classList.remove("bg-secondary");
-                    document.getElementById("cartaResultado").classList.remove("bg-success");
-                    document.getElementById("cartaResultado").classList.add("bg-danger");
-                    efectivo += -800;
-                    state = "table-danger";
-                    derrotas += 1;
-                }
-                document.getElementById("ultimos").innerHTML += "<tbody><th>"+counter+"</th><td>"+valores[0]+"</td><td>"+valores[1]+"</td><td class='"+state+"'>"+document.getElementById("resultado").innerHTML+"</td><td class='"+state+"'>"+efectivo+"</td></tbody>";
-                document.getElementById("victorias").innerHTML = victorias;
-                document.getElementById("derrotas").innerHTML = derrotas;
-                document.getElementById("efectivo").innerHTML = efectivo;
-
-            }
-            diceSound.pause();
-            diceSound.currentTime=0;
-            document.getElementById("tirar").disabled = false;
-            document.getElementById("tirar20").disabled = false;
-            document.getElementById("tirar100").disabled = false;
-        }
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-        function resetGame(){
-            if(confirm("Esta seguro que desea reiniciar")){
-                setup();
-                document.getElementById("ultimos").innerHTML = '<thead class="thead-dark"><tr><th scope="col">tiro #</th><th scope="col">dado 2</th><th scope="col">dado 1</th><th scope="col">resultado</th><th scope="col">efectivo</th></tr></thead>';
-            }
-        }
-    </script>
-
-    <script>
-        function exportarCSV() {
-            const tabla = document.getElementById("ultimos");
-            const cols = tabla.querySelectorAll("tr");
-            let csv = [];
-            for (const col of cols) {
-                const celdas = col.querySelectorAll('td, th');
-                const textoColumna = Array.from(celdas).map(celda => celda.innerText);
-                csv.push(textoColumna.join(','));
-            }
-            const csvString = csv.join('\n');
-            const csvFile = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-            const downloadLink = document.createElement('a');
-            downloadLink.href = URL.createObjectURL(csvFile);
-            downloadLink.download = "ultimos.csv";
-            downloadLink.style.display = 'none';
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-        }
-    </script>
-</body>
+          </div>
+    </body>
 </html>

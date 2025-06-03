@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Juego de mitades</title>
+    <link rel="icon" href="https://cdn-icons-png.freepik.com/512/1714/1714131.png" type="image/x-icon">
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href= "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <style>
+        .dados { 
+            font-size: 600%; 
+        }
+        .ultimos thead th {
+            position: sticky; 
+            top: 0; z-index: 1;
+        }
+    </style>
+</head>
+<body onload="setup()">
+    <section class="jumbotron text-center">
+        <div class="card align-self-center mx-auto" style="width: 100%;">
+            <div class="card-body text-white bg-secondary">
+                <h2 class="card-title">Juego de mitades</h2>
+                <p class="card-text">Las reglas son simples:</p>
+                <p class="card-text">tira dos dados si el valor de uno es el doble que el otro ganas $3200</p>
+                <p class="card-text">precio por partida $800</p>
+            </div>
+        </div>
+        <div class="container" onclick="document.getElementById('tirar').click()">
+                    <a id="dado1" class="fs-4"></a>    
+                    <a id="dado2" class="fs-4"></a>    
+        </div>
+        <div id="cartaResultado" class="card text-white bg-secondary mx-auto" style="width: 30rem;">
+            <div class="card-body">
+                <h3 id="resultado" class="card-title">tira los dados para jugar</h3>
+            </div>
+        </div>
+        <p></p>
+        <button onclick="TirarDados()" id="tirar" class="btn btn-success">Tirar dados</button>
+        <button onclick="TirarDados(20)" id="tirar20" class="btn btn-success">Tirar dados 20 veces</button>
+        <button onclick="TirarDados(100)" id="tirar100" class="btn btn-success">Tirar dados 100 veces</button>
+        <p></p>
+        <button onclick="resetGame()" class="btn btn-danger" id="breset" disabled>reiniciar juego</button>
+        <button onclick="exportarCSV()" class="btn btn-info" id="bcsv" disabled>exportar tabla a csv</button>
+        <p></p>
+        <table class="table table-bordered">
+            <thead class="thead">
+                <th scope="col" class="table-info">Nro de tiros <a id="tiro"></a></th>
+                <th scope="col" class="table-success">ganaste <a id="victorias"></a></th>
+                <th scope="col" class="table-danger"> perdiste <a id="derrotas"></a></th>
+                <th scope="col" class="table-info"> tu saldo es de <a id="efectivo"></a> pesos</th>
+                <th scope="col" class="table-info"> mejor saldo <a id="mejor"></a> pesos</th>
+            </thead>
+        </table>
+        <div class="table-responsive" style="height: 30rem; overflow-y: auto;">
+            <table class="table table-bordered ultimos" id="ultimos">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">tiro #</th>
+                        <th scope="col">dado 2</th>
+                        <th scope="col">dado 1</th>
+                        <th scope="col">resultado</th>
+                        <th scope="col">efectivo</th>
+                    </tr> 
+                </thead>
+            </table>
+        </div>
+    </section>
+    <footer style="text-align: center;">
+        El juego compulsivo es perjudicial para vos y tu familia
+        <p></p>
+        <p></p>
+        <p></p>
+    </footer>
+
+    <script>
+        //contador de tiradas
+        let counter = 0;
+        const objTiros = document.getElementById("tiro");
+        //contador de victorias
+        let victorias = 0;
+        const objVictorias = document.getElementById("victorias");
+        //contador de derrotas
+        let derrotas = 0;
+        const objDerrotas = document.getElementById("derrotas");
+        //contador efectivo
+        let efectivo = 0;
+        const objEfectivo = document.getElementById("efectivo");
+        let mejor = 0;
+        const objMejor = document.getElementById("mejor");
+        //valores y graficos de los dados
+        let valores = [0,0]
+        const objDado1 = document.getElementById("dado1");
+        const objDado2 = document.getElementById("dado2");
+        //manejo de resultado
+        const txtResultado = document.getElementById("resultado");
+        const crdResultado = document.getElementById("cartaResultado");
+        const tablaResultados = document.getElementById("ultimos");
+        //botones
+        const btnCsv = document.getElementById("bcsv");
+        const btnReset = document.getElementById("breset");
+        const btnTir = document.getElementById("tirar");
+        const btnTir20 = document.getElementById("tirar20");
+        const btnTir100 = document.getElementById("tirar100");
+
+
+        //sonido de esta pagina https://www.myinstants.com/en/instant/rolling-dice-98674/
+        var diceSound = new Audio("https://www.myinstants.com/media/sounds/shake-and-roll-dice-soundbible.mp3")
+
+        //carga la forma inicial del juego
+        function setup() {
+            valores[0]=1;
+            valores[1]=6;
+            counter = 0;
+            victorias = 0;
+            derrotas = 0;
+            efectivo = 0;
+            mejor = 0;
+            objDado1.innerHTML = genDado(1);
+            objDado2.innerHTML = genDado(6);
+            objVictorias.innerHTML = victorias+" veces , 0%";
+            objDerrotas.innerHTML = derrotas+" veces , 0%";
+            objTiros.innerHTML = counter;
+            objEfectivo.innerHTML = efectivo;
+            objMejor.innerHTML = mejor;
+            setResultado("tira los dados para jugar",0);
+            btnCsv.disabled = true;
+            btnReset.disabled = true;
+        }
+
+        //funcion encargada de generar los valores aleatorios y manegar el juego en general
+        //hace los valores de los dados, y suma o resta el efectivo
+        async function TirarDados(multiple=1) {
+            btnCsv.disabled = true;
+            btnReset.disabled = true;
+            btnTir.disabled = true;
+            btnTir20.disabled = true;
+            btnTir100.disabled = true;
+            diceSound.play();
+            let state = "";
+            await girarDados();
+
+            for (let i = 0; i < multiple; i++) {
+                counter += 1;
+                valores[0]=Math.floor((Math.random() * 6)+1);
+                valores[1]=Math.floor((Math.random() * 6)+1);
+                if((valores[1]/2==valores[0])|(valores[0]/2==valores[1])){
+                    setResultado("Ganaste",1);
+                    agregarTabla(counter,valores[0],valores[1],"table-success");
+                    efectivo += 3200;
+                    victorias += 1;
+                } else {
+                    setResultado("Perdiste",2);
+                    agregarTabla(counter,valores[0],valores[1],"table-danger");
+                    efectivo += -800;
+                    derrotas += 1;
+                }
+                objVictorias.innerHTML = victorias+" veces , "+((victorias*100)/counter).toFixed(1)+"%";
+                objDerrotas.innerHTML = derrotas+" veces , "+((derrotas*100)/counter).toFixed(1)+"%";
+                objTiros.innerHTML = counter;
+                objEfectivo.innerHTML = efectivo;
+                if(efectivo>mejor){
+                    mejor = efectivo;
+                }
+                objMejor.innerHTML = mejor;
+                objDado1.innerHTML = genDado(valores[0]);
+                objDado2.innerHTML = genDado(valores[1]);
+            }
+                
+            diceSound.pause();
+            diceSound.currentTime=0;
+            btnCsv.disabled = false;
+            btnReset.disabled = false;
+            btnTir.disabled = false;
+            btnTir20.disabled = false;
+            btnTir100.disabled = false;
+        }
+
+        //realiza la animacion de simular girar dados
+        async function girarDados(){
+            for (let i = 0; i < 50; i++) {
+                objDado1.innerHTML = genDado(Math.floor((Math.random() * 6)+1));
+                objDado2.innerHTML = genDado(Math.floor((Math.random() * 6)+1));
+                await sleep(10);
+            }
+        }
+
+        //esta funcion es para generar tiempo oscioso
+        //la utiliza la animacion de girar los dados ya que dibuja un estado espera 10ms y dibuja otro estado
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        //funcion encargada de reiniciar el juego
+        function resetGame(){
+            if(confirm("Esta seguro que desea reiniciar")){
+                setup();
+                tablaResultados.innerHTML = '<thead class="thead-dark"><tr><th scope="col">tiro #</th><th scope="col">dado 2</th><th scope="col">dado 1</th><th scope="col">resultado</th><th scope="col">efectivo</th></tr></thead>';
+            }
+        }
+
+        //cambia el dibujo de la tabla de resultados
+        function setResultado(texto,estado){
+            txtResultado.innerHTML = texto;
+            switch(estado){
+                case 0:
+                    crdResultado.classList.remove("bg-success");
+                    crdResultado.classList.remove("bg-danger");
+                    crdResultado.classList.add("bg-secondary");
+                break;
+
+                case 1:
+                    crdResultado.classList.add("bg-success");
+                    crdResultado.classList.remove("bg-danger");
+                    crdResultado.classList.remove("bg-secondary");
+                break;
+
+                case 2:
+                    crdResultado.classList.remove("bg-success");
+                    crdResultado.classList.add("bg-danger");
+                    crdResultado.classList.remove("bg-secondary");
+                break;
+            }
+        }
+
+        //agrega un resultado a la tabla de resultados
+        function agregarTabla(id,d1,d2,estado){
+            tablaResultados.innerHTML += "<tbody><th>"+id+"</th><td>"+d1+"</td><td>"+d2+"</td><td class='"+estado+"'>"+txtResultado.innerHTML+"</td><td class='"+estado+"'>"+efectivo+"</td></tbody>";
+        }
+
+        //funcion usada para llamarar el icono de bootstrap correspondiente al valor del dado
+        function genDado(num){
+            return '<i class="bi bi-dice-'+num+' dados"></i>';
+        }
+    </script>
+
+    <script>
+        //script para convertir la tabla de resultados a un csv
+        function exportarCSV() {
+            const tabla = document.getElementById("ultimos");
+            const cols = tabla.querySelectorAll("tr");
+            let csv = [];
+            for (const col of cols) {
+                const celdas = col.querySelectorAll('td, th');
+                const textoColumna = Array.from(celdas).map(celda => celda.innerText);
+                csv.push(textoColumna.join(','));
+            }
+            const csvString = csv.join('\n');
+            const csvFile = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(csvFile);
+            downloadLink.download = "ultimos.csv";
+            downloadLink.style.display = 'none';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
+    </script>
+</body>
+</html>
